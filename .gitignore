@@ -1,0 +1,5 @@
+# Godot import cache (generated)
+.godot/
+
+# engine binary - download Godot 4.7 into Godot\ (Godot.exe) separately
+Godot/

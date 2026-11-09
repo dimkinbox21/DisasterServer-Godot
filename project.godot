@@ -1,0 +1,34 @@
+; Engine configuration file.
+; DisasterServer — standalone Godot server replicating BetterServer (v1101)
+config_version=5
+
+[application]
+
+config/name="DisasterServer v1101"
+run/main_scene="res://src/server.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+
+window/size/viewport_width=480
+window/size/viewport_height=270
+window/size/window_width_override=960
+window/size/window_height_override=540
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
+window/stretch/scale_mode="integer"
+
+[physics]
+
+common/physics_ticks_per_second=60
+
+[autoload]
+
+GM="*res://src/gm.gd"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)
