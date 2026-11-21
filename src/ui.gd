@@ -1,194 +1,343 @@
 extends Node2D
-## UI layer replicating BetterServer: grid background, red bars, /MAIN title,
-## log panel, side buttons, bottom nav MAIN|OPTIONS|PLAYERS|INFO.
-
-const COL_WHITE := Color(0.92, 0.92, 0.92)
-const COL_RED := Color(0.95, 0.15, 0.15)
-const COL_GRAY := Color(0.55, 0.55, 0.55)
-const COL_SELECTED := Color(0.95, 0.15, 0.15)
-const COL_GREEN := Color(0.0, 1.0, 0.35)
-const COL_YELLOW := Color(1.0, 0.9, 0.3)
-
-var screen := 0  # 0=MAIN 1=OPTIONS 2=PLAYERS 3=INFO
+## Original BetterServer.exe atlas and recovered SDL source/destination rectangles.
+const ATLAS = preload("res://assets/ui/betterserver_atlas.png")
+const NAV_POS := [Vector2(59, 249), Vector2(150, 249), Vector2(268, 249), Vector2(386, 249)]
+const NAV_WIDTH := [32, 54, 53, 29]
+const TITLE_SRC := [
+	Rect2(1829, 0, 64, 16), Rect2(1925, 0, 103, 16), Rect2(2032, 0, 112, 16), Rect2(2172, 0, 55, 16)
+]
+const TITLE_POS := [Vector2(199, 10), Vector2(184, 10), Vector2(179, 10), Vector2(208, 10)]
+const MAP_SET_NAMES := [
+	"DEFAULT",
+	"CLASSIC",
+	"EASY",
+	"MEDIUM",
+	"HARD",
+	"MADNESS",
+	"NIGHTMARE UNIVERSE",
+	"SPIRITS OF HELL"
+]
+# Keep existing non-default preset memberships; expand DEFAULT and manual selection.
+const MAP_SETS := [
+	[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+	[2],
+	[0, 2],
+	[3],
+	[],
+	[],
+	[3],
+	[0]
+]
+const PING_LIMITS := [80, 120, 180, 250, 65535]
+const PING_NAMES := ["VERY STRICT", "STRICT", "FORGIVING", "DEFAULT", "UNLIMITED"]
+var screen := 0
 var scroll_t := 0.0
+var map_scroll := 0.0
+var log_scroll := 0
 var click_pending := false
+var click_position := Vector2.ZERO
+var press_pulse := false
 
-var nav_names := ["MAIN", "OPTIONS", "PLAYERS", "INFO"]
-var nav_x := [77, 177, 295, 397]
 
-var side_buttons := ["BACK TO LOBBY", "PRACTICE MODE", "FORCE EXE WIN", "FORCE ESCAPE"]
-var side_y := [142, 175, 208, 241]
+func _ready() -> void:
+	scale = Vector2(2, 2)  # SDL original renders logical coordinates directly at 960x540.
+
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		click_pending = true
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
+			click_pending = true
+			click_position = get_global_transform_with_canvas().affine_inverse() * event.position
+			press_pulse = true
+		if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			var step := 1 if event.button_index == MOUSE_BUTTON_WHEEL_DOWN else -1
+			if screen == 1 and _pointer().x < 288:
+				map_scroll = clampf(map_scroll + step * 31, 0, 124)
+			elif screen == 0:
+				log_scroll = maxi(0, log_scroll - step * 3)
+
 
 func _physics_process(delta: float) -> void:
 	scroll_t += delta
-	_click_check()
+	if click_pending:
+		click_pending = false
+		_click(click_position)
 	queue_redraw()
 
-func _click_check() -> void:
-	if not click_pending:
-		return
-	click_pending = false
-	# stretch/resolution-aware canvas coordinates (client-proven approach)
-	var mp := get_global_mouse_position()
-	var mx: float = mp.x
-	var my: float = mp.y
-	# bottom nav first (always available so you can leave any screen)
-	for i in nav_names.size():
-		var w := GM.text_width(nav_names[i], 2.0)
-		if _gm_button_hit(mx, my, nav_x[i] - w / 2 - 4, 250, w + 8, 20):
+
+func _pointer() -> Vector2:
+	return get_local_mouse_position()
+
+
+func _mouse_down() -> bool:
+	return (
+		Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+		or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
+	)
+
+
+func _press_offset(rect: Rect2) -> Vector2:
+	return Vector2(0, 1) if _hover(rect) and _mouse_down() else Vector2.ZERO
+
+
+func _hover(rect: Rect2) -> bool:
+	return rect.has_point(_pointer())
+
+
+func _sprite(src: Rect2, at: Vector2, size := Vector2.ZERO, color := Color.WHITE) -> void:
+	draw_texture_rect_region(
+		ATLAS, Rect2(at, src.size if size == Vector2.ZERO else size), src, color
+	)
+
+
+func _text(
+	value: String, at: Vector2, color := Color.WHITE, scale := 1.0, max_width := INF
+) -> float:
+	var x: float = at.x
+	var y: float = at.y
+	for ch in value.to_lower():
+		if ch == "\n":
+			x = at.x
+			y += 8 * scale
+			continue
+		if ch == " ":
+			x += 5 * scale
+			continue
+		if x + 8 * scale > at.x + max_width:
+			break
+		var idx: int = GM._letter_index(ch)
+		_sprite(Rect2(480 + idx * 8, 432, 8, 6), Vector2(x, y), Vector2(8, 6) * scale, color)
+		x += (8 if ch in GM._WIDE_CHARS else 6) * scale
+	return x
+
+
+func _button(src_x: int, at: Vector2, height := 20, green := false) -> void:
+	var rect := Rect2(at, Vector2(128, height))
+	var over := _hover(rect)
+	# Native draw callbacks 0x1400270e8/0x14002721c: hover takes
+	# precedence over the enabled sprite; held buttons move two screen pixels.
+	var offset := 128 if over else (256 if green else 0)
+	if src_x in [4016, 4272]:
+		_sprite(Rect2(src_x + offset, 0, 128, height), at)
+		if over:
+			# Selector callbacks draw a separate arrow layer, nudged on the press edge.
+			_sprite(Rect2(1680, 0, 116, 32), at + (Vector2(0, 1) if press_pulse else Vector2.ZERO))
+	else:
+		_sprite(Rect2(src_x + offset, 0, 128, height), at + _press_offset(rect))
+
+
+func _click(point: Vector2) -> void:
+	var srv = get_parent()
+	for i in 4:
+		if Rect2(NAV_POS[i], Vector2(NAV_WIDTH[i], 8)).grow(2).has_point(point):
 			screen = i
 			return
-	# side buttons (MAIN screen)
 	if screen == 0:
-		for i in side_buttons.size():
-			if _gm_button_hit(mx, my, 325, side_y[i] - 9, 125, 18):
-				_side_pressed(i)
+		for i in 4:
+			if Rect2(320, 106 + i * 30, 128, 20).has_point(point):
+				match i:
+					0:
+						srv.ui_force_back_to_lobby()
+					1:
+						srv.practice_mode()
+					2:
+						srv.ui_force_exe_win()
+					3:
+						srv.ui_force_escape()
 				return
-	# options toggles
 	if screen == 1:
-		var srv := get_parent()
-		var rows: Array = _option_rows()
-		for i in rows.size():
-			if _gm_button_hit(mx, my, 20, 40 + i * 18, 440, 14):
-				srv.toggle_option(rows[i][0])
+		var maps: Array = (
+			srv
+			. config
+			. get("maps", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
+			. duplicate()
+		)
+		var clip := Rect2(0, 38, 286, 195)
+		for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]:
+			if clip.has_point(point) and _map_rect(i).has_point(point):
+				if maps.has(i):
+					maps.erase(i)
+				else:
+					maps.append(i)
+				srv.config.maps = maps
+				srv.config.map_set = -1
+				_save_options("MAP %d %s." % [i, "ENABLED" if maps.has(i) else "DISABLED"])
 				return
+		var direction := -1 if point.x < 384 else 1
+		var message := ""
+		if Rect2(320, 48, 128, 40).has_point(point):
+			var preset: int = srv.config.get(
+				"map_set",
+				(
+					0
+					if (
+						maps
+						== [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+					)
+					else -1
+				)
+			)
+			preset = posmod(preset + direction, MAP_SETS.size())
+			srv.config.map_set = preset
+			srv.config.maps = MAP_SETS[preset].duplicate()
+			message = "MAP SET: %s." % MAP_SET_NAMES[preset]
+		elif Rect2(320, 96, 128, 20).has_point(point):
+			srv.config.maps = []
+			srv.config.map_set = -1
+			message = "ALL MAPS DISABLED."
+		elif Rect2(320, 125, 128, 40).has_point(point):
+			var index := PING_LIMITS.find(int(srv.config.get("ping_limit", 65535)))
+			index = posmod(index + direction, PING_LIMITS.size())
+			srv.config.ping_limit = PING_LIMITS[index]
+			message = "PING LIMIT: %s." % ("UNLIMITED" if index == 4 else str(PING_LIMITS[index]))
+		elif Rect2(320, 172, 128, 20).has_point(point):
+			srv.config.anticheat = not srv.config.get("anticheat", false)
+			message = (
+				"CLIENT MODIFICATIONS %s." % ("DISALLOWED" if srv.config.anticheat else "ALLOWED")
+			)
+		elif Rect2(320, 200, 128, 20).has_point(point):
+			srv.config.camp_tease = not srv.config.get("camp_tease", true)
+			message = "CAMP TEASE %s." % ("ENABLED" if srv.config.camp_tease else "DISABLED")
+		else:
+			return
+		_save_options(message)
 
-func _gm_button_hit(mx: float, my: float, x: float, y: float, w: float, h: float) -> bool:
-	return mx >= x and mx <= x + w and my >= y and my <= y + h
 
-func _side_pressed(i: int) -> void:
-	var srv := get_parent()
-	match i:
-		0: srv.ui_force_back_to_lobby()
-		1: srv.practice_mode()
-		2: srv.ui_force_exe_win()
-		3: srv.ui_force_escape()
+func _save_options(message: String) -> void:
+	var srv = get_parent()
+	srv.save_all()
+	srv._maybe_start_vote()
+	srv.log_line("UI", message)
 
-func _option_rows() -> Array:
-	return [
-		["port", "PORT"],
-		["server_count", "SERVER COUNT"],
-		["ping_limit", "PING LIMIT"],
-		["log_file", "LOG FILE"],
-		["log_debug", "LOG DEBUG"],
-		["anticheat", "ANTICHEAT"],
-		["pride", "PRIDE"],
-		["motd", "MOTD"],
-	]
+
+func _map_rect(index: int) -> Rect2:
+	# Native MapList callback: x=8+143*column, y=90+124*row, size=123x104.
+	return Rect2(4 + (index % 4) * 71.5, 45 + (index / 4) * 62 - map_scroll, 61.5, 52)
+
 
 func _draw() -> void:
-	# tiled animated grid background
-	var tex := GM.sprite_texture("background_test", int(Time.get_ticks_msec() / 100))
-	if tex:
-		var off := fmod(-scroll_t * 0.2 * 96.0, 96.0)
-		var x := off
-		while x < 480:
-			var y := 0.0
-			while y < 270:
-				draw_texture(tex, Vector2(x, y), Color(0.35, 0.35, 0.35))
-				y += 96
-			x += 96
-	# red bars
-	draw_rect(Rect2(0, 45, 480, 2), Color(0.6, 0.02, 0.02))
-	draw_rect(Rect2(0, 252, 480, 2), Color(0.6, 0.02, 0.02))
-	draw_rect(Rect2(0, 46, 480, 1), Color(0.25, 0.0, 0.0))
-	# title
-	var title := "/MAIN"
+	# room_menu.yy: 10 FPS, hspeed=-0.2 at 60 ticks/s. Keep the
+	# phase fractional, but draw on native pixels (half a logical pixel).
+	var frame := int(scroll_t * 10) % 28
+	var offset_x := -floorf(fposmod(scroll_t * 12.0, 48.0) * 2.0) / 2.0
+	for x in 11:
+		for y in 6:
+			_sprite(
+				Rect2(480 + frame * 96, 446, 96, 96),
+				Vector2(x * 48 + offset_x, y * 48),
+				Vector2(48, 48)
+			)
+	draw_rect(Rect2(0, 0, 480, 36), Color.BLACK)
+	draw_rect(Rect2(0, 236, 480, 34), Color.BLACK)
+	_sprite(Rect2(0, 272, 480, 270), Vector2.ZERO)
+	_sprite(TITLE_SRC[screen], TITLE_POS[screen])
 	match screen:
-		1: title = "/OPTIONS"
-		2: title = "/PLAYERS"
-		3: title = "/INFO"
-	var tw := GM.text_width(title, 3.0)
-	GM.draw_text(self, 240 - tw / 2, 8, title, COL_WHITE, 3.0)
+		0:
+			_main()
+		1:
+			_options()
+		2:
+			_players()
+		3:
+			_info()
+	for i in 4:
+		var rect := Rect2(NAV_POS[i], Vector2(NAV_WIDTH[i], 8))
+		var over := _hover(rect)
+		_sprite(
+			Rect2(480 + (NAV_WIDTH[i] if over else 0), 400 + i * 8, NAV_WIDTH[i], 8),
+			NAV_POS[i] + _press_offset(rect)
+		)
+	press_pulse = false
 
-	match screen:
-		0: _draw_main()
-		1: _draw_options()
-		2: _draw_players()
-		3: _draw_info()
 
-	# bottom nav
-	for i in nav_names.size():
-		var w := GM.text_width(nav_names[i], 2.0)
-		var col := COL_SELECTED if screen == i else COL_WHITE
-		GM.draw_text(self, nav_x[i] - w / 2, 260, nav_names[i], col, 2.0)
+func _main() -> void:
+	_sprite(Rect2(128, 0, 272, 176), Vector2(16, 48), Vector2(276, 176))
+	var logs: Array = get_parent().logs
+	var start := maxi(0, logs.size() - 40 - mini(log_scroll, maxi(0, logs.size() - 40)))
+	for i in mini(40, logs.size() - start):
+		var line: Dictionary = logs[start + i]
+		# Clip to the original log panel, including long usernames/messages.
+		_text(str(line.text).left(87), Vector2(24, 56 + i * 4), line.col, 0.5, 260)
+	for i in 4:
+		_button(400 + i * 256, Vector2(320, 106 + i * 30))
 
-func _draw_main() -> void:
-	# log panel
-	var panel := Rect2(22, 62, 273, 172)
-	draw_rect(panel.grow(2), Color(0.85, 0.85, 0.85))
-	draw_rect(panel, Color(0.02, 0.02, 0.02))
-	var srv := get_parent()
-	var y := 66.0
-	for l in srv.logs:
-		GM.draw_text(self, 26, y, l.text, l.col)
-		y += 8
-	GM.draw_text(self, 26, 238, "chat works in game. join via the game's JOIN GAME.", COL_GRAY)
-	# side buttons
-	for i in side_buttons.size():
-		var bw := GM.text_width(side_buttons[i], 2.0)
-		var bx := 325.0
-		var by: float = side_y[i] - 9
-		draw_rect(Rect2(bx, by, 125, 18), Color(0.05, 0.02, 0.02))
-		draw_rect(Rect2(bx, by, 125, 18), COL_RED, false, 1.0)
-		draw_rect(Rect2(bx + 1, by + 1, 123, 16), Color(0.10, 0.02, 0.02))
-		GM.draw_text(self, bx + (125 - bw) / 2, by + 5, side_buttons[i], COL_RED, 2.0)
 
-func _draw_options() -> void:
-	var srv := get_parent()
-	var rows: Array = _option_rows()
-	GM.draw_text(self, 60, 30, "setting", COL_GRAY)
-	GM.draw_text(self, 300, 30, "value", COL_GRAY)
-	for i in rows.size():
-		var key: String = rows[i][0]
-		var label: String = rows[i][1]
-		var val = srv.config.get(key, "")
-		GM.draw_text(self, 30, 44 + i * 18, label, COL_WHITE)
-		GM.draw_text(self, 300, 44 + i * 18, str(val), COL_GREEN)
-	GM.draw_text(self, 30, 44 + rows.size() * 18 + 8, "click a bool row to toggle it", COL_GRAY)
-	GM.draw_text(self, 30, 44 + rows.size() * 18 + 20, "edits save to config.json", COL_GRAY)
+func _options() -> void:
+	var srv = get_parent()
+	var maps: Array = srv.config.get(
+		"maps", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+	)
+	_sprite(Rect2(2540, 38, 4, 195), Vector2(284, 38))
+	var clip := Rect2(0, 38, 286, 195)
+	for i in 20:
+		var dest := _map_rect(i)
+		if _hover(dest) and clip.has_point(_pointer()) and not _mouse_down():
+			dest.position.y -= 1
+		var area := dest.intersection(clip)
+		if not area.has_area():
+			continue
+		var src := Rect2(480 + i * 123, 272, 123, 104)
+		src.position += (area.position - dest.position) * Vector2(2, 2)
+		src.size = area.size * Vector2(2, 2)
+		var color := Color.WHITE if maps.has(i) else Color(96.0 / 255, 96.0 / 255, 96.0 / 255)
+		_sprite(src, area.position, area.size, color)
+	_button(4016, Vector2(320, 48), 40)
+	var preset: int = srv.config.get(
+		"map_set",
+		0 if maps == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] else -1
+	)
+	_text(
+		(
+			MAP_SET_NAMES[preset]
+			if preset >= 0 and preset < MAP_SET_NAMES.size()
+			else ("CUSTOM" if not maps.is_empty() else "NONE")
+		),
+		Vector2(328, 73)
+	)
+	_button(3540, Vector2(320, 96))
+	_button(4272, Vector2(320, 125), 40)
+	var limit: int = srv.config.get("ping_limit", 65535)
+	var ping_index := PING_LIMITS.find(limit)
+	var value_x := _text(
+		PING_NAMES[ping_index] if ping_index >= 0 else "CUSTOM", Vector2(328, 150), Color.GREEN
+	)
+	_text(" - " + ("OFF" if limit == 65535 else str(limit)), Vector2(value_x, 150))
+	_button(3120, Vector2(320, 172), 20, not srv.config.get("anticheat", false))
+	_button(2736, Vector2(320, 200), 20, srv.config.get("camp_tease", true))
 
-func _draw_players() -> void:
-	var srv := get_parent()
-	if srv.players.is_empty():
-		GM.draw_text(self, 30, 70, "no players connected.", COL_GRAY)
-		return
-	GM.draw_text(self, 30, 40, "nid", COL_GRAY)
-	GM.draw_text(self, 80, 40, "nickname", COL_GRAY)
-	GM.draw_text(self, 220, 40, "state", COL_GRAY)
-	GM.draw_text(self, 330, 40, "ping", COL_GRAY)
-	var i := 0
-	for nid: int in srv.players:
-		var p: Dictionary = srv.players[nid]
-		var st := "WAITING"
-		match srv.server_state:
-			0: st = "WAITING"
-			1: st = "LOBBY" + (" [READY]" if p.ready else "")
-			2: st = "VOTE"
-			3: st = "CHARSELECT" + (" (EXE)" if nid == srv.exe_nid else "")
-			4: st = "GAME"
-		GM.draw_text(self, 30, 58 + i * 14, str(nid), COL_WHITE)
-		GM.draw_text(self, 80, 58 + i * 14, p.nickname, COL_WHITE)
-		GM.draw_text(self, 220, 58 + i * 14, st, COL_GREEN if p.ready else COL_WHITE)
-		GM.draw_text(self, 330, 58 + i * 14, str(p.ping), COL_WHITE)
-		i += 1
 
-func _draw_info() -> void:
-	var srv := get_parent()
-	var lines := [
-		["DISASTER V%d (GODOT REPLICA)" % srv.BUILD_VER, COL_GREEN],
-		["BUILD FROM MOD ... BDY-01/31/25.", COL_RED],
-		["(C) 2021 TEAM EXE EMPIRE", COL_WHITE],
-		["PORT: %d" % int(srv.config.get("port", 8606)), COL_WHITE],
-		["PLAYERS: %d" % srv.players.size(), COL_WHITE],
-		["UPTIME: %d SEC" % int(srv.uptime), COL_WHITE],
-		["STATE: %s" % ["WAITING", "LOBBY", "VOTE", "CHARSELECT", "GAME"][srv.server_state], COL_YELLOW],
-	]
-	var y := 70.0
-	for l in lines:
-		GM.draw_text(self, 60, y, l[0], l[1], 1.5)
-		y += 18
+func _players() -> void:
+	var srv = get_parent()
+	var xs := [16, 168, 320]
+	for i in 3:
+		_sprite(Rect2(4528, 0, 144, 176), Vector2(xs[i], 48))
+		var width: int = [80, 96, 64][i]
+		_sprite(
+			Rect2(4752 if i == 2 else 4672, 8 if i == 1 else 0, width, 8),
+			Vector2(xs[i] + (144 - width) / 2, 52)
+		)
+	var row := 0
+	for player in srv.players.values():
+		_text(str(player.nickname).left(20), Vector2(24, 67 + row * 8), Color.WHITE, 0.75)
+		row += 1
+	row = 0
+	for id in srv.operators:
+		_text(str(id).left(20), Vector2(176, 67 + row * 8), Color.WHITE, 0.75)
+		row += 1
+	row = 0
+	for id in srv.bans:
+		_text(str(id).left(20), Vector2(328, 67 + row * 8), Color.WHITE, 0.75)
+		row += 1
+
+
+func _info() -> void:
+	var srv = get_parent()
+	_text("DISASTERSERVERUI", Vector2(4, 42), Color(0.7, 0.15, 1))
+	_text("GODOT PORT", Vector2(125, 42), Color(0.2, 0.4, 1))
+	_text("(C) 2024 TEAM EXE EMPIRE", Vector2(4, 50))
+	_text("GAME VERSION:", Vector2(4, 74))
+	_text("V" + str(srv.BUILD_VER), Vector2(90, 74), Color(0.7, 0.15, 1))
+	_text("ENGINE:", Vector2(4, 82))
+	_text("GODOT " + Engine.get_version_info().string, Vector2(58, 82), Color(0.7, 0.15, 1))
+	_text("PORT: " + str(srv.config.get("port", 8606)), Vector2(4, 90))
+	_text("PLAYERS: " + str(srv.players.size()), Vector2(4, 98))

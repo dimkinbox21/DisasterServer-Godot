@@ -1,5 +1,20 @@
-# Godot import cache (generated)
+# Generated Godot cache and local engine binaries
 .godot/
-
-# engine binary - download Godot 4.7 into Godot\ (Godot.exe) separately
 Godot/
+
+# Runtime logs and local editor files
+*.log
+*.err
+*.tmp
+*.bak
+__pycache__/
+.DS_Store
+Thumbs.db
+
+# Exported packages and local secrets
+build/
+dist/
+.export/
+.env
+.env.*
+export_credentials.cfg

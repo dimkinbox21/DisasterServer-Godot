@@ -1,0 +1,170 @@
+{
+  "0": {
+    "name": "Hide and Seek Act 2",
+    "folder": "hide_and_seek_act_2",
+    "scene": "res://scenes/map_hideandseek2.tscn",
+    "base_seconds": 300,
+    "seconds_per_survivor": 0,
+    "playable": true
+  },
+  "1": {
+    "name": "Ravine Mist",
+    "folder": "ravine_mist",
+    "scene": "res://scenes/map_ravinemist.tscn",
+    "base_seconds": 180,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "2": {
+    "name": "...",
+    "folder": "dot_dot_dot",
+    "scene": "res://scenes/map_dotdotdot.tscn",
+    "base_seconds": 300,
+    "seconds_per_survivor": 0,
+    "playable": true
+  },
+  "3": {
+    "name": "Desert Town",
+    "folder": "desert_town",
+    "scene": "res://scenes/map_deserttown.tscn",
+    "base_seconds": 300,
+    "seconds_per_survivor": 0,
+    "playable": true
+  },
+  "4": {
+    "name": "You Can't Run",
+    "folder": "you_cant_run",
+    "scene": "res://scenes/map_youcantrun.tscn",
+    "base_seconds": 180,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "5": {
+    "name": "Limp City",
+    "folder": "limp_city",
+    "scene": "res://scenes/map_limpcity.tscn",
+    "base_seconds": 155,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "6": {
+    "name": "Not Perfect",
+    "folder": "not_perfect",
+    "scene": "res://scenes/map_notperfect.tscn",
+    "base_seconds": 155,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "7": {
+    "name": "Kind and Fair",
+    "folder": "kind_and_fair",
+    "scene": "res://scenes/map_kindandfair.tscn",
+    "base_seconds": 180,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "8": {
+    "name": "Act 9",
+    "folder": "act_9",
+    "scene": "res://scenes/map_act9.tscn",
+    "base_seconds": 130,
+    "seconds_per_survivor": 10,
+    "playable": true
+  },
+  "9": {
+    "name": "Nasty Paradise",
+    "folder": "nasty_paradise",
+    "scene": "res://scenes/map_nastyparadise.tscn",
+    "base_seconds": 155,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "10": {
+    "name": "Priceless Freedom",
+    "folder": "priceless_freedom",
+    "scene": "res://scenes/map_pricelessfreedom.tscn",
+    "base_seconds": 155,
+    "seconds_per_survivor": 10,
+    "playable": true
+  },
+  "11": {
+    "name": "Volcano Valley",
+    "folder": "volcano_valley",
+    "scene": "res://scenes/map_volcanovalley.tscn",
+    "base_seconds": 180,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "12": {
+    "name": "Hill",
+    "folder": "hill",
+    "scene": "res://scenes/map_greenhill.tscn",
+    "base_seconds": 180,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "13": {
+    "name": "Majin Forest",
+    "folder": "majin_forest",
+    "scene": "res://scenes/map_majongforest.tscn",
+    "base_seconds": 155,
+    "seconds_per_survivor": 10,
+    "playable": true
+  },
+  "14": {
+    "name": "Hide and Seek",
+    "folder": "hide_and_seek",
+    "scene": "res://scenes/map_angelisland.tscn",
+    "base_seconds": 180,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "15": {
+    "name": "Torture Cave",
+    "folder": "torture_cave",
+    "scene": "res://scenes/map_torturecave.tscn",
+    "base_seconds": 155,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "16": {
+    "name": "Dark Tower",
+    "folder": "dark_tower",
+    "scene": "res://scenes/map_dartower.tscn",
+    "base_seconds": 205,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "17": {
+    "name": "Haunting Dream",
+    "folder": "haunting_dream",
+    "scene": "res://scenes/map_haundream.tscn",
+    "base_seconds": 205,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "18": {
+    "name": "Mystic Wood",
+    "folder": "mystic_wood",
+    "scene": "res://scenes/map_weedzone.tscn",
+    "base_seconds": 155,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "19": {
+    "name": "Echidna Ruins",
+    "folder": "echidna_ruins",
+    "scene": "res://scenes/map_marijuna.tscn",
+    "base_seconds": 205,
+    "seconds_per_survivor": 20,
+    "playable": true
+  },
+  "20": {
+    "name": "Fart Zone",
+    "folder": "fart_zone",
+    "scene": "res://scenes/map_fartzone.tscn",
+    "base_seconds": 256,
+    "seconds_per_survivor": 20,
+    "playable": false
+  }
+}
