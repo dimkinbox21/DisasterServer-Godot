@@ -7,27 +7,9 @@ const TITLE_SRC := [
 	Rect2(1829, 0, 64, 16), Rect2(1925, 0, 103, 16), Rect2(2032, 0, 112, 16), Rect2(2172, 0, 55, 16)
 ]
 const TITLE_POS := [Vector2(199, 10), Vector2(184, 10), Vector2(179, 10), Vector2(208, 10)]
-const MAP_SET_NAMES := [
-	"DEFAULT",
-	"CLASSIC",
-	"EASY",
-	"MEDIUM",
-	"HARD",
-	"MADNESS",
-	"NIGHTMARE UNIVERSE",
-	"SPIRITS OF HELL"
-]
-# Keep existing non-default preset memberships; expand DEFAULT and manual selection.
-const MAP_SETS := [
-	[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
-	[2],
-	[0, 2],
-	[3],
-	[],
-	[],
-	[3],
-	[0]
-]
+const MapProfiles = preload("res://src/data/map_profiles.gd")
+const MAP_SET_NAMES = MapProfiles.NAMES
+const MAP_SETS = MapProfiles.MAPS
 const PING_LIMITS := [80, 120, 180, 250, 65535]
 const PING_NAMES := ["VERY STRICT", "STRICT", "FORGIVING", "DEFAULT", "UNLIMITED"]
 var screen := 0

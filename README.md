@@ -15,6 +15,25 @@ The standalone server for the [Disaster 2D Godot client](https://github.com/dimk
 Godot is not required to run a release build. Remote hosting uses UDP port `8606` by default.
 Client and server must use the same build; the original GameMaker client is not compatible.
 
+## Playing over Radmin VPN
+
+Only the host needs the server; other players need the client. Everyone must be
+online in the same Radmin VPN network. The host starts DisasterServer, and friends
+enter the **host's Radmin IPv4 address** (`26.x.x.x`) in the client's IP field.
+`localhost` and `127.0.0.1` connect to the player's own computer.
+
+The server listens on every IPv4 interface using **UDP 8606** by default. Allow
+`DisasterServer.exe` through the host's firewall on the network profile used by
+Radmin; do not disable the firewall. VPN tunnels do not require router forwarding.
+Use the current port client and server, rather than the original GameMaker builds.
+
+If connecting fails, first check that Radmin shows both peers online, then test
+`ping <host-Radmin-IP>` from the friend's machine. A ping timeout alone does not
+prove the tunnel is down, because ICMP may be blocked. Check UDP/firewall rules
+and the server's connection log too. Connecting to your own Radmin IP only tests
+the local machine, not the friend's tunnel. `Test-NetConnection -Port` tests TCP
+and cannot validate this game's UDP connection.
+
 ## Features
 
 - Lobby, map voting, character selection, rounds and results.
@@ -36,6 +55,28 @@ The server stores these files in its Godot user data directory (`user://`):
 
 By default, `127.0.0.1` is an operator. The `motd` setting is shown in the client chat
 when a player joins and when they use `.info`.
+
+## Map profiles
+
+Server hotfix **v1130.1** restores the full original presets and remains compatible
+with client build **1130**, including client hotfix **v1130.1**.
+
+| Profile | Maps |
+| --- | --- |
+| DEFAULT | Hide and Seek Act 2, Ravine Mist, ..., Desert Town, You Can't Run, Limp City, Not Perfect, Kind and Fair, Act 9, Nasty Paradise, Priceless Freedom, Volcano Valley, Hill, Majin Forest, Hide and Seek, Torture Cave, Dark Tower, Haunting Dream, Mystic Wood, Echidna Ruins |
+| CLASSIC | ..., You Can't Run, Not Perfect, Kind and Fair, Act 9, Hill, Hide and Seek |
+| EASY | Hide and Seek Act 2, ..., Dark Tower, Haunting Dream, Echidna Ruins |
+| MEDIUM | Ravine Mist, Desert Town, You Can't Run, Kind and Fair, Volcano Valley, Hill, Hide and Seek |
+| HARD | Limp City, Not Perfect, Nasty Paradise, Torture Cave, Mystic Wood |
+| MADNESS | Act 9, Priceless Freedom, Majin Forest |
+| NIGHTMARE UNIVERSE | Ravine Mist, Desert Town, Nasty Paradise, Priceless Freedom |
+| SPIRITS OF HELL | Hide and Seek Act 2, Limp City, Volcano Valley, Majin Forest |
+
+Previously truncated named profiles are upgraded and saved automatically. Manual
+map pools (`map_set: -1`), including an empty pool, stay unchanged. A named profile
+with a manually changed membership is relabelled CUSTOM without changing its maps.
+Profile definitions are shared by the control panel and configuration migration in
+`src/data/map_profiles.gd`.
 
 ## Commands
 

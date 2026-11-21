@@ -6,6 +6,7 @@ extends Node2D
 const BUILD_VER := 1130
 const MAX_PLAYERS := 10
 const Maps = preload("res://src/data/maps.gd")
+const MapProfiles = preload("res://src/data/map_profiles.gd")
 var PLAYABLE_MAPS: Array = Maps.playable_ids()
 var profile_rules = preload("res://src/profile_rules.gd").new(self)
 # Original client exposes exeNear, but its server radius is not in the OSS sources.
@@ -126,26 +127,7 @@ func _upgrade_map_pool() -> void:
 			):
 				normalized.append(int(value))
 		config.maps = normalized
-	# The old two-map default gains HS2; a manually edited pool stays intact.
-	if (
-		not config.has("maps")
-		or (
-			config.get("map_set", 0) == 0
-			and (
-				config.get("maps", [])
-				in [
-					[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17],
-					[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 14, 15],
-					[2, 3],
-					[0, 2, 3],
-					[0, 2, 3, 6, 8, 14, 15],
-					[0, 2, 3, 6, 7, 8, 9, 12, 14, 15]
-				]
-			)
-		)
-	):
-		config.maps = PLAYABLE_MAPS.duplicate()
-		config.map_set = 0
+	MapProfiles.upgrade(config)
 
 
 func _load_files() -> void:
@@ -164,6 +146,7 @@ func _load_files() -> void:
 			"motd": "",
 		}
 		_save_config()
+	var previous_config := config.duplicate(true)
 	_upgrade_map_pool()
 	operators = (
 		JSON.parse_string(FileAccess.get_file_as_string("user://Operators.json"))
@@ -179,6 +162,8 @@ func _load_files() -> void:
 		else []
 	)
 	bans = b if b is Array else []
+	if config != previous_config:
+		_save_config()
 
 
 func _save_config() -> void:
