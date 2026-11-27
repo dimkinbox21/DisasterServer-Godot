@@ -55,3 +55,26 @@ func tick() -> void:
 		walls()
 	for p in host.players.values():
 		crush(p)
+
+
+func sync_simulation(world):
+	var fraction := clampf(1.0 - host.game_ticks / float(total_ticks), 0, 1)
+	for n in world.dynamic.values():
+		var id := int(n.properties.get("nid", 0))
+		n.position = (
+			Vector2(-2240, int(1025 * fraction) - 768)
+			if id == 0
+			else (
+				Vector2(int(1663 * fraction) - 2240, 0)
+				if id == 1
+				else Vector2(3072 - int(1663 * fraction), 0)
+			)
+		)
+
+
+func after_actor(actor, _p: Dictionary):
+	var fraction := clampf(1.0 - host.game_ticks / float(total_ticks), 0, 1)
+	actor.position.x = clampf(
+		actor.position.x, int(1663 * fraction) + 8, 3072 - int(1663 * fraction) - 8
+	)
+	actor.position.y = maxf(actor.position.y, int(1025 * fraction) + 16)

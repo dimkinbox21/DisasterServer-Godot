@@ -291,3 +291,18 @@ func consume_ring(p: Dictionary):
 
 static func slug_cargo(roll: int) -> int:
 	return 0 if roll < 50 else (1 if roll < 90 else 2)
+
+
+func simulation_interactions(world, p: Dictionary, actor):
+	super.simulation_interactions(world, p, actor)
+	for id in shards:
+		world.request(p, NetPackets.CLIENT_RMZSHARD_COLLECT, id, true)
+	for id in slugs:
+		world.request(p, NetPackets.CLIENT_RMZSLIME_HIT, id, true, 0)
+
+
+func simulation_state(actor, p: Dictionary):
+	actor.shards = 0
+	for shard in shards.values():
+		if shard.owner == p.nid:
+			actor.shards += 1

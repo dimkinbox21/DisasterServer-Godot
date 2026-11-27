@@ -76,3 +76,14 @@ func tick():
 					)
 				):
 					hazard(p)
+
+
+func after_actor(actor, _p: Dictionary):
+	for water in host.motion.world.objects.values():
+		if (
+			water.gm_name == "obj_ghz_water"
+			and water.bbox_rect().intersects(
+				Rect2(actor.position + Vector2(-6, 17), Vector2(12, 3))
+			)
+		):
+			actor.apply_slow(30, 0.6)

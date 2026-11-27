@@ -19093,5 +19093,686 @@
       6977.0,
       245.0
     ]
-  ]
+  ],
+  "hazards": {
+    "height": 1024.0,
+    "items": [
+      {
+        "bounds": [
+          135.0,
+          616.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 152.0,
+        "y": 648.0
+      },
+      {
+        "bounds": [
+          1007.0,
+          500.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 1024.0,
+        "y": 532.0
+      },
+      {
+        "bounds": [
+          3747.0,
+          360.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 3764.0,
+        "y": 392.0
+      },
+      {
+        "bounds": [
+          6355.0,
+          244.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 6372.0,
+        "y": 276.0
+      },
+      {
+        "bounds": [
+          6727.0,
+          244.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 6744.0,
+        "y": 276.0
+      },
+      {
+        "bounds": [
+          7399.0,
+          616.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 7416.0,
+        "y": 648.0
+      },
+      {
+        "bounds": [
+          2287.0,
+          500.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_exespawn",
+        "x": 2304.0,
+        "y": 532.0
+      },
+      {
+        "bounds": [
+          5099.0,
+          548.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_exespawn",
+        "x": 5116.0,
+        "y": 580.0
+      },
+      {
+        "bounds": [
+          4519.0,
+          676.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_exespawn",
+        "x": 4536.0,
+        "y": 708.0
+      },
+      {
+        "bounds": [
+          6543.0,
+          680.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_exespawn",
+        "x": 6560.0,
+        "y": 712.0
+      },
+      {
+        "bounds": [
+          7947.0,
+          356.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_exespawn",
+        "x": 7964.0,
+        "y": 388.0
+      }
+    ],
+    "rings": [
+      [
+        108.0,
+        612.0
+      ],
+      [
+        136.0,
+        612.0
+      ],
+      [
+        164.0,
+        612.0
+      ],
+      [
+        584.0,
+        432.0
+      ],
+      [
+        612.0,
+        432.0
+      ],
+      [
+        640.0,
+        432.0
+      ],
+      [
+        1784.0,
+        612.0
+      ],
+      [
+        1808.0,
+        612.0
+      ],
+      [
+        1832.0,
+        612.0
+      ],
+      [
+        2296.0,
+        504.0
+      ],
+      [
+        2760.0,
+        356.0
+      ],
+      [
+        2784.0,
+        356.0
+      ],
+      [
+        2808.0,
+        356.0
+      ],
+      [
+        3592.0,
+        572.0
+      ],
+      [
+        3592.0,
+        596.0
+      ],
+      [
+        3592.0,
+        620.0
+      ],
+      [
+        5456.0,
+        512.0
+      ],
+      [
+        5484.0,
+        512.0
+      ],
+      [
+        5512.0,
+        512.0
+      ],
+      [
+        7064.0,
+        616.0
+      ],
+      [
+        7100.0,
+        616.0
+      ],
+      [
+        7136.0,
+        616.0
+      ],
+      [
+        7124.0,
+        296.0
+      ],
+      [
+        8100.0,
+        512.0
+      ],
+      [
+        8068.0,
+        512.0
+      ],
+      [
+        8036.0,
+        512.0
+      ]
+    ]
+  },
+  "simulation_objects": [
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_5C924A4",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      1536.0,
+      580.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_16B23661",
+    "object": "obj_yspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_yspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      3040.0,
+      580.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_yspring_up",
+    "xdir": 0,
+    "ydir": -11
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_321037E",
+    "object": "obj_yspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_yspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      3824.0,
+      648.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_yspring_up",
+    "xdir": 0,
+    "ydir": -11
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_9F0FC21",
+    "object": "obj_angleallower",
+    "parents": [
+      "obj_angleallower"
+    ],
+    "position": [
+      3691.0,
+      368.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      0.75,
+      0.75
+    ],
+    "sprite": "spr_red",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_26EFF8B5",
+    "object": "obj_bspring_left",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_left",
+      "obj_spring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      7680.0,
+      432.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_left",
+    "xdir": -10,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_313AE7F9",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      6908.0,
+      72.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      18.125,
+      8.5
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_1624F837",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      6848.0,
+      488.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      18.125,
+      8.5
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_54303B95",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      5192.0,
+      332.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      13.562501,
+      8.5
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_7A49124D",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      4324.0,
+      508.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      17.9375,
+      8.5
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_74A97BA4",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      3548.0,
+      556.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      8.0625,
+      5.375
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_478B8B36",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      2748.0,
+      288.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      18.6875,
+      5.375
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_55B70131",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      -20.0,
+      356.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      15.562501,
+      15.125
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_BC2210D",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      7624.0,
+      304.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      19.125,
+      15.875
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_2131DDBE",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      5924.0,
+      540.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      15.5,
+      9.125
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_66263AF0",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      6977.0,
+      245.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_46A151A9",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      2204.0,
+      592.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      2.375,
+      2.125
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_35B2C537",
+    "object": "obj_ghz_water",
+    "parents": [
+      "obj_ghz_water"
+    ],
+    "position": [
+      4421.8955078125,
+      844.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      260.09375,
+      4.75
+    ],
+    "sprite": "spr_green",
+    "xdir": 0,
+    "ydir": -12
+  }
+]
 }

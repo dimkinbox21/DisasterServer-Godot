@@ -53,7 +53,7 @@ func handle(p, type: int, b: StreamPeerBuffer) -> bool:
 			msg.put_u16(p.last_y)
 			msg.put_u8(0)
 			host._send(p.peer, msg)
-			p.last_x = x
+			host.motion.warp(p, Vector2(x, p.last_y), false)
 			p.tower_tp_until = age + 6
 		elif kind == 1:
 			recover_forest(p)
@@ -104,6 +104,7 @@ func recover_forest(p: Dictionary):
 	host._send(p.peer, msg)
 	p.last_x = best.position[0]
 	p.last_y = best.position[1]
+	host.motion.warp(p, Vector2(p.last_x, p.last_y))
 	p.tower_tp_until = age + 15
 
 
@@ -121,3 +122,9 @@ func tick():
 		snapshot()
 		events.clear()
 		pending = false
+
+
+func simulation_interactions(world, p: Dictionary, actor):
+	super.simulation_interactions(world, p, actor)
+	if actor.position.x <= 248 or actor.position.x >= 3400:
+		world.request(p, NetPackets.CLIENT_TOWER_INTERACT, 0)

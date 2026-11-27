@@ -183,3 +183,12 @@ func tick():
 		if potato[id].ticks <= 0:
 			clear_potato(id)
 			losses[id] = 30
+
+
+func moving_spike_frame() -> int:
+	return SPIKE_FRAMES[spike_index]
+
+
+func sync_simulation(world):
+	for n in world.dynamic.values():
+		n.set_spike_frame(moving_spike_frame())

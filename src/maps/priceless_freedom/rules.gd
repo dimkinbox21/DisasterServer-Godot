@@ -18,7 +18,7 @@ func human(p: Dictionary) -> bool:
 
 
 func event(kind: String, at := Vector2.ZERO, owner := -1, extra: Dictionary = {}):
-	var data = {}
+	var data = {"kind": kind, "x": at.x, "y": at.y, "owner": owner}
 	data.merge(extra)
 	events.append(data)
 	pending = true
@@ -166,6 +166,10 @@ func tick_lifts():
 				lift.owner = -1
 				lift.cooldown = 90
 				p.last_y = lift.end
+				host.motion.warp(p, Vector2(lift.x, lift.end))
+				if host.motion.world.actors.has(p.nid):
+					host.motion.world.actors[p.nid].yspd = -3
+					p.motion_velocity = Vector2(0, -3)
 				event("lift_end", Vector2(lift.x, lift.y), -1, {"player": owner, "id": int(id)})
 		elif lift.cooldown > 0:
 			lift.cooldown -= 1
@@ -174,3 +178,45 @@ func tick_lifts():
 				lift.speed = 0.0
 				lift.ready = age + 63
 				event("lift_reset", Vector2(lift.x, lift.y), -1, {"id": int(id)})
+
+
+func riding(p: Dictionary) -> Dictionary:
+	for lift in lifts.values():
+		if lift.owner == p.nid:
+			return lift
+	return {}
+
+
+func before_actor(actor, p: Dictionary):
+	var lift := riding(p)
+	if not lift.is_empty():
+		actor.Globals.playerControls = false
+	elif actor.get_meta("riding", false):
+		actor.Globals.playerControls = true
+	actor.set_meta("riding", not lift.is_empty())
+
+
+func after_actor(actor, p: Dictionary):
+	var lift := riding(p)
+	if lift.is_empty():
+		return
+	actor.position = Vector2(lift.x, lift.y - 16)
+	actor.xspd = 0
+	actor.yspd = 0
+	actor.gspd = 0
+	actor.isHurt = false
+	actor.isFlying = false
+	actor.isSpinning = false
+	actor.isJumping = false
+	actor.isGrounded = false
+	actor.isAttacking = false
+	actor.state = 5
+	actor.apply_anim()
+	actor.image_speed = 0.5
+
+
+func simulation_interactions(world, p: Dictionary, actor):
+	super.simulation_interactions(world, p, actor)
+	simulation_requests(world, p, {"obj_pf_lift": NetPackets.CLIENT_PFLIT_ACTIVATE})
+	for id in rings:
+		world.request(p, NetPackets.CLIENT_BRING_COLLECTED, int(id), true)

@@ -92,8 +92,7 @@ func owner_stats(p: Dictionary, mode := 0) -> void:
 
 
 func teleport(p: Dictionary, at: Vector2) -> void:
-	p.last_x = int(at.x)
-	p.last_y = int(at.y)
+	host.motion.warp(p, at)
 	var b: StreamPeerBuffer = host._pkt(NetPackets.SERVER_PLAYER_BACKTRACK)
 	b.put_u16(p.last_x)
 	b.put_u16(p.last_y)
@@ -102,3 +101,43 @@ func teleport(p: Dictionary, at: Vector2) -> void:
 
 static func duration_seconds(map_id: int, survivors: int) -> int:
 	return preload("res://src/data/maps.gd").duration_seconds(map_id, survivors)
+
+
+func sync_simulation(_world):
+	pass
+
+
+func before_actor(_actor, _p: Dictionary):
+	pass
+
+
+func after_actor(_actor, _p: Dictionary):
+	pass
+
+
+func before_collision(_actor):
+	pass
+
+
+func simulation_state(_actor, _p: Dictionary):
+	pass
+
+
+func input_buttons(_p: Dictionary, held: int) -> int:
+	return held
+
+
+func moving_spike_frame() -> int:
+	return -1
+
+
+func simulation_interactions(world, p: Dictionary, actor):
+	if host.exit_ready and actor.position.distance_to(host.exit_position) < 28:
+		world.request(p, NetPackets.CLIENT_PLAYER_ESCAPED)
+
+
+func simulation_requests(world, p: Dictionary, bindings: Dictionary):
+	for type in bindings:
+		for i in objects(type):
+			if i.has("bounds") and body(p).grow(8).intersects(rect(i)):
+				world.request(p, bindings[type], int(i.properties.get("nid", 0)))

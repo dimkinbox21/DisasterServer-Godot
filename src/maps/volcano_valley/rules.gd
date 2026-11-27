@@ -19,7 +19,7 @@ func human(p: Dictionary) -> bool:
 
 
 func event(kind: String, at := Vector2.ZERO, owner := -1, extra: Dictionary = {}):
-	var data = {}
+	var data = {"kind": kind, "x": at.x, "y": at.y, "owner": owner}
 	data.merge(extra)
 	events.append(data)
 	pending = true
@@ -200,3 +200,8 @@ func tick_volcano():
 		for p in host.players.values():
 			if human(p) and body(p).intersects(hazard):
 				hurt(p, 6, 1 if p.last_x >= i.position[0] else -1)
+
+
+func simulation_interactions(world, p: Dictionary, actor):
+	super.simulation_interactions(world, p, actor)
+	simulation_requests(world, p, {"obj_vv_vase": NetPackets.CLIENT_VVVASE_BREAK})

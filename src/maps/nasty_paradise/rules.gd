@@ -174,3 +174,13 @@ func tick():
 					and body(p).intersects(Rect2(at - Vector2(40, 82), Vector2(81, 82)))
 				):
 					hazard(p)
+
+
+func sync_simulation(world):
+	for n in world.dynamic.values():
+		n.collision_active = not ice.has(int(n.properties.get("nid", 0)))
+
+
+func simulation_interactions(world, p: Dictionary, actor):
+	super.simulation_interactions(world, p, actor)
+	simulation_requests(world, p, {"obj_nap_iceblock": NetPackets.CLIENT_NAPICE_ACTIVATE})

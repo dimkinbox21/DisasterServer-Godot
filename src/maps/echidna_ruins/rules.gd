@@ -26,7 +26,7 @@ func human(p: Dictionary) -> bool:
 
 
 func event(kind: String, at := Vector2.ZERO, owner := -1, extra: Dictionary = {}):
-	var data = {}
+	var data = {"kind": kind, "x": at.x, "y": at.y, "owner": owner}
 	data.merge(extra)
 	events.append(data)
 	pending = true
@@ -252,3 +252,37 @@ func tick_ruins():
 				hurt(p)
 		if shot.life <= 0:
 			shots.erase(id)
+
+
+func sync_simulation(world):
+	for n in world.dynamic.values():
+		n.set_meta("previous_y", n.position.y)
+		if not lava.is_empty():
+			n.position.y = lava.y
+
+
+func input_buttons(p: Dictionary, held: int) -> int:
+	if age >= p.get("ruins_until", 0):
+		return held
+	return (
+		(held & ~15) | ((held & 1) << 1) | ((held & 2) >> 1) | ((held & 4) << 1) | ((held & 8) >> 1)
+	)
+
+
+func before_collision(actor: Node):
+	if actor.get_meta("carry_frame", -1) == host._game_frame:
+		return
+	actor.set_meta("carry_frame", host._game_frame)
+	for n in host.motion.world.dynamic.values():
+		if n.gm_name != "obj_marijuna_lavaplatform":
+			continue
+		var box: Rect2 = n.bbox_rect()
+		var previous_y: float = n.get_meta("previous_y", n.position.y)
+		var change: float = n.position.y - previous_y
+		if (
+			actor.yspd >= 0
+			and absf(actor.position.y + 18 - (box.position.y - change)) <= 6
+			and actor.position.x >= box.position.x - 7
+			and actor.position.x <= box.end.x + 7
+		):
+			actor.position.y += change

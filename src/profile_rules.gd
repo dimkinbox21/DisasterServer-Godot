@@ -25,7 +25,6 @@ func tick():
 	for p in host.players.values():
 		if (
 			not living(p)
-			or p.get("hurttime", 0) > 0
 			or p.get("stunned_ticks", 0) > 0
 			or p.get("red_ring", 0) > 0
 		):
@@ -41,7 +40,7 @@ func tick():
 				or not target.get("position_ready", false)
 			):
 				continue
-			if absf(p.last_x - target.last_x) > 16 or absf(p.last_y - target.last_y) > 36:
+			if not touching(p, target):
 				continue
 			var revival = (
 				pose == 8 and target.get("is_dead", false) and target.get("revival", 0) == 0
@@ -69,7 +68,9 @@ func tick():
 					target.revival = 1
 					target.dead_timer = 0
 					target.hurttime = 240
+					target.dead_final = false
 					p.rings = 0
+					event(p, "revive", 1, target.nid)
 					host._send(target.peer, host._pkt(NetPackets.SERVER_REVIVAL_REVIVED))
 					host._send(p.peer, host._pkt(NetPackets.SERVER_REVIVAL_RINGSUB))
 				else:
@@ -85,8 +86,7 @@ func tick():
 	for key in interactions:
 		if not active.has(key):
 			var id = int(str(key).get_slice(":", 0))
-			if host.players.has(id):
-				interaction_packet(host.players[id], -1, 0, false)
+			interaction_packet({"nid": id}, -1, 0, false)
 	interactions = active
 
 
@@ -96,12 +96,26 @@ func interaction_packet(p: Dictionary, target: int, amount: float, revival: bool
 		(
 			JSON
 			. stringify(
-				{"kind": "interaction", "target": target, "progress": amount, "revive": revival}
+				{
+					"kind": "interaction",
+					"helper": p.nid,
+					"target": target,
+					"progress": amount,
+					"revive": revival
+				}
 			)
 			. to_utf8_buffer()
 		)
 	)
-	host._send(p.peer, b)
+	host._broadcast(b)
+
+
+func touching(p: Dictionary, target: Dictionary) -> bool:
+	var a = host.motion.world.actors.get(p.nid)
+	var b = host.motion.world.actors.get(target.nid)
+	if is_instance_valid(a) and is_instance_valid(b):
+		return a.bbox_rect().intersects(b.bbox_rect())
+	return false
 
 
 func handle(p, type: int, b: StreamPeerBuffer) -> bool:
@@ -124,6 +138,7 @@ func handle(p, type: int, b: StreamPeerBuffer) -> bool:
 	var count = b.get_u8()
 	if count % 4 != 0 or count > 252 or b.get_available_bytes() != count:
 		return true
+	p.palette_name = label
 	var packet = host._pkt(NetPackets.CLIENT_PLAYER_PALETTE, true)
 	packet.put_u8(side)
 	packet.put_u16(p.nid)

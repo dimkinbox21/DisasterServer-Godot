@@ -88,3 +88,8 @@ func tick():
 		if broken[id] <= 0:
 			broken.erase(id)
 			emit(NetPackets.SERVER_KAFMONITOR_STATE, [1, id])
+
+
+func simulation_interactions(world, p: Dictionary, actor):
+	super.simulation_interactions(world, p, actor)
+	simulation_requests(world, p, {"obj_kaf_speedboobster": NetPackets.CLIENT_KAFMONITOR_ACTIVATE})

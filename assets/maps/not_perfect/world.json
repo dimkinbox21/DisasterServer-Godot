@@ -15781,5 +15781,567 @@
       4144.0,
       2136.0
     ]
-  ]
+  ],
+  "hazards": {
+    "height": 2736.0,
+    "items": [
+      {
+        "bounds": [
+          695.0,
+          448.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 712.0,
+        "y": 480.0
+      },
+      {
+        "bounds": [
+          1023.0,
+          592.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 1040.0,
+        "y": 624.0
+      },
+      {
+        "bounds": [
+          1823.0,
+          784.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_spawnpoint",
+        "x": 1840.0,
+        "y": 816.0
+      },
+      {
+        "bounds": [
+          967.0,
+          1024.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_exespawn",
+        "x": 984.0,
+        "y": 1056.0
+      },
+      {
+        "bounds": [
+          1271.0,
+          1072.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_exespawn",
+        "x": 1288.0,
+        "y": 1104.0
+      },
+      {
+        "bounds": [
+          1367.0,
+          376.0,
+          32.0,
+          32.0
+        ],
+        "stun": false,
+        "type": "obj_exespawn",
+        "x": 1384.0,
+        "y": 408.0
+      }
+    ],
+    "rings": [
+      [
+        1144.0,
+        528.0
+      ],
+      [
+        904.0,
+        384.0
+      ],
+      [
+        1312.0,
+        384.0
+      ],
+      [
+        728.0,
+        672.0
+      ],
+      [
+        504.0,
+        624.0
+      ],
+      [
+        512.0,
+        744.0
+      ],
+      [
+        848.0,
+        888.0
+      ],
+      [
+        1056.0,
+        960.0
+      ],
+      [
+        1528.0,
+        672.0
+      ],
+      [
+        1528.0,
+        456.0
+      ],
+      [
+        1584.0,
+        312.0
+      ],
+      [
+        1952.0,
+        720.0
+      ],
+      [
+        840.0,
+        2040.0
+      ],
+      [
+        576.0,
+        1968.0
+      ],
+      [
+        792.0,
+        1800.0
+      ],
+      [
+        992.0,
+        1728.0
+      ],
+      [
+        1168.0,
+        1896.0
+      ],
+      [
+        1176.0,
+        1648.0
+      ],
+      [
+        1336.0,
+        1816.0
+      ],
+      [
+        1344.0,
+        1968.0
+      ],
+      [
+        1096.0,
+        2088.0
+      ],
+      [
+        1384.0,
+        1680.0
+      ],
+      [
+        1736.0,
+        1968.0
+      ],
+      [
+        1912.0,
+        1752.0
+      ],
+      [
+        1840.0,
+        2064.0
+      ],
+      [
+        1536.0,
+        2184.0
+      ],
+      [
+        1392.0,
+        2256.0
+      ],
+      [
+        1288.0,
+        2352.0
+      ],
+      [
+        1184.0,
+        2256.0
+      ],
+      [
+        632.0,
+        2280.0
+      ],
+      [
+        3808.0,
+        1992.0
+      ],
+      [
+        4264.0,
+        1992.0
+      ],
+      [
+        4144.0,
+        2280.0
+      ],
+      [
+        3752.0,
+        2352.0
+      ],
+      [
+        3376.0,
+        2112.0
+      ],
+      [
+        3176.0,
+        2256.0
+      ],
+      [
+        3216.0,
+        2256.0
+      ],
+      [
+        4832.0,
+        1992.0
+      ],
+      [
+        4736.0,
+        2256.0
+      ],
+      [
+        4600.0,
+        1944.0
+      ],
+      [
+        5056.0,
+        2328.0
+      ],
+      [
+        3288.0,
+        720.0
+      ],
+      [
+        3528.0,
+        720.0
+      ],
+      [
+        3504.0,
+        936.0
+      ],
+      [
+        3752.0,
+        960.0
+      ],
+      [
+        4264.0,
+        960.0
+      ],
+      [
+        4072.0,
+        888.0
+      ],
+      [
+        4264.0,
+        600.0
+      ],
+      [
+        4048.0,
+        600.0
+      ],
+      [
+        4976.0,
+        720.0
+      ],
+      [
+        4928.0,
+        672.0
+      ],
+      [
+        4760.0,
+        600.0
+      ],
+      [
+        5272.0,
+        960.0
+      ],
+      [
+        5376.0,
+        1032.0
+      ],
+      [
+        4592.0,
+        1032.0
+      ],
+      [
+        4632.0,
+        1032.0
+      ],
+      [
+        2992.0,
+        1032.0
+      ],
+      [
+        3032.0,
+        1032.0
+      ],
+      [
+        248.0,
+        960.0
+      ],
+      [
+        144.0,
+        2352.0
+      ]
+    ]
+  },
+  "simulation_objects": [
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_4FD7BFB3_1",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      500.0,
+      912.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_F9CF29E_1",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      1240.0,
+      768.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_3B59EB05_1",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      4144.0,
+      768.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_321E3DF9_1",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      3404.0,
+      912.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_24ADAB0E_1",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      1240.0,
+      2136.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_E735DA5_1",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      500.0,
+      2280.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_FAAB960_1",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      3404.0,
+      2280.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 0.0,
+    "name": "inst_21780E49_1",
+    "object": "obj_bspring_up",
+    "parents": [
+      "obj_spring_parent",
+      "obj_bspring_up",
+      "obj_camerachecker"
+    ],
+    "position": [
+      4144.0,
+      2136.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      1.0,
+      1.0
+    ],
+    "sprite": "spr_bspring_up",
+    "xdir": 0,
+    "ydir": -10
+  },
+  {
+    "can_stuck": false,
+    "floor": false,
+    "hold_sensitive": false,
+    "image_index": 0.0,
+    "image_speed": 1.0,
+    "name": "inst_38A27ED1_1",
+    "object": "obj_angleanuller_eggsafe",
+    "parents": [
+      "obj_angleanuller_eggsafe"
+    ],
+    "position": [
+      0.0,
+      0.0
+    ],
+    "properties": {},
+    "rotation": 0.0,
+    "scale": [
+      172.625,
+      86.125
+    ],
+    "sprite": "spr_ramphelper_right",
+    "xdir": 0,
+    "ydir": -12
+  }
+]
 }

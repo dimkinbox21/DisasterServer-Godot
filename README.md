@@ -4,7 +4,7 @@ The standalone server for the [Disaster 2D Godot client](https://github.com/dimk
 
 ![Godot](https://img.shields.io/badge/Godot-4.7.2-478cbf)
 ![Platform](https://img.shields.io/badge/Windows-x86__64-blue)
-![Build](https://img.shields.io/badge/build-1130-green)
+![Build](https://img.shields.io/badge/build-1131-green)
 
 ## Download and host
 
@@ -37,7 +37,9 @@ and cannot validate this game's UDP connection.
 ## Features
 
 - Lobby, map voting, character selection, rounds and results.
-- Server-controlled damage, rings, cooldowns and profile events.
+- Canonical HP, death, revival and rings broadcast to every client.
+- Server hit tests, Tails projectiles, ring pickup/destruction and common hazards.
+- Input-only actor physics, server spawn pools and prediction reconciliation.
 - Twenty regular maps plus Fart Zone practice.
 - Separate authoritative mechanics and world data for each map.
 - Chat commands, operator actions, vote kick and solo testing.
@@ -58,8 +60,7 @@ when a player joins and when they use `.info`.
 
 ## Map profiles
 
-Server hotfix **v1130.1** restores the full original presets and remains compatible
-with client build **1130**, including client hotfix **v1130.1**.
+The full original profiles are restored. Build **1131** requires client build **1131**.
 
 | Profile | Maps |
 | --- | --- |
@@ -99,6 +100,11 @@ Practice requires at least two players and does not award achievements or curren
 | Path | Purpose |
 | --- | --- |
 | `src/server.gd` | ENet transport and round lifecycle |
+| `src/player_health.gd` | Canonical health snapshots and shared map hazards |
+| `src/player_attacks.gd` | Server melee, charge windows and projectiles |
+| `src/ring_authority.gd` | Ring hit tests, pickup and destruction |
+| `src/simulation/` | Headless actor runtime, dynamic collision objects and character controllers |
+| `src/movement_authority.gd` | Input simulation, spawn pools, checkpoints and warp epochs |
 | `src/maps/<map>/rules.gd` | One map's authoritative mechanics |
 | `src/maps/shared/rules.gd` | Shared geometry, damage and teleport operations |
 | `assets/maps/<map>/world.json` | Entities, collision geometry, rings, exits and springs |
@@ -110,6 +116,23 @@ Practice requires at least two players and does not award achievements or curren
 | `src/net_packets.gd` | Packet IDs |
 
 Only the selected map's module is active during a round.
+
+## Authority model
+
+Clients predict movement for immediate input response. Movement packets contain
+input buttons, round IDs and sequence numbers. The server calculates actor
+physics with the matching client's exported controllers and collision sensors,
+then publishes checkpoints. Clients restore those checkpoints and replay pending
+input. Round IDs and warp epochs reject obsolete corrections after teleports.
+
+`src/simulation/generated/` is generated from the client source by its
+`tools/export_server_simulation.py`; edit the client controllers and re-export.
+The headless runtime keeps animation timing used by abilities and omits artwork
+and sound. Elapsed server ticks limit input catch-up work and packet floods.
+
+HP, healing, death and revival are computed on the server and broadcast separately
+from movement. Player health snapshots use revisions, are repeated periodically,
+and are sent for newly created actors. Client damage/death claims are ignored.
 
 ## Build from source
 

@@ -11,7 +11,7 @@ var pending = false
 
 
 func event(kind: String, at := Vector2.ZERO, owner := -1, extra: Dictionary = {}):
-	var data = {}
+	var data = {"kind": kind, "x": at.x, "y": at.y, "owner": owner}
 	data.merge(extra)
 	events.append(data)
 	pending = true
@@ -97,3 +97,22 @@ func tick_wood():
 			lantern = -1
 			lantern_timer = randi_range(7, 8) * 60
 			pending = true
+
+
+func after_actor(actor: Node, _p: Dictionary):
+	for belt in SimulationNode.all_of("obj_weed_convejor"):
+		var box: Rect2 = belt.bbox_rect()
+		var touched := false
+		for foot in [actor._sens_BL, actor._sens_BR]:
+			if (
+				foot.x >= box.position.x - 4
+				and foot.x <= box.end.x
+				and foot.y >= box.position.y
+				and foot.y <= box.end.y
+			):
+				touched = true
+		if touched:
+			for step in 4:
+				if SimulationFloor.point_meeting_floor(actor.position.x - 9, actor.position.y - 4):
+					break
+				actor.position.x -= 1

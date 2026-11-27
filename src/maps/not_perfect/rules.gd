@@ -56,6 +56,7 @@ func tick() -> void:
 				var at := Vector2(p.last_x, p.last_y) - offset(previous) + offset(np_state)
 				p.last_x = int(at.x)
 				p.last_y = int(at.y)
+				host.motion.warp(p, at)
 		np_packet(true, np_state, previous)
 	elif np_stage == 0 and np_timer >= (120 if fast else 900):
 		np_stage = 1

@@ -115,8 +115,8 @@ func sally_shield(p: Dictionary) -> bool:
 
 func effect(id: int, at: Vector2, motion := Vector2.ZERO, speed := 1.0, except_nid := -1) -> void:
 	var b: StreamPeerBuffer = host._pkt(NetPackets.CLIENT_SPAWN_EFFECT)
-	b.put_u16(int(at.x))
-	b.put_u16(int(at.y))
+	b.put_16(int(at.x))
+	b.put_16(int(at.y))
 	b.put_u8(0)
 	b.put_8(1)
 	b.put_u8(id)
@@ -180,6 +180,9 @@ func knux_attacking(p: Dictionary) -> bool:
 
 
 func knux_stun(victim: Dictionary, attacker: Dictionary) -> void:
+	victim.stunned_ticks = 180
+	victim.hurttime = maxi(victim.hurttime, 300)
+	victim.motion_stun = -signf(pos(attacker).x - pos(victim).x) * 4
 	var b: StreamPeerBuffer = host._pkt(NetPackets.SERVER_CHARACTER_STATUS)
 	b.put_u8(3)
 	b.put_u16(180)
@@ -220,6 +223,7 @@ func try_parry(a: Dictionary, b: Dictionary) -> bool:
 		p.hurttime = 60
 		p.stunned_ticks = 0
 		p.attacking = false
+		p.motion_parry = [direction * (3 if p.nid == human.nid else -2), 60]
 		if p.char == 2:
 			p.knux_attack_end = 0
 		if p.char in [4, 6]:
@@ -275,6 +279,12 @@ func valid_action(p: Dictionary, char_id: int) -> bool:
 
 
 func status(p: Dictionary, kind: int, ticks: int) -> void:
+	if kind == 1:
+		p.stunned_ticks = maxi(p.get("stunned_ticks", 0), ticks)
+		p.hurttime = maxi(p.hurttime, ticks + 120)
+		p.motion_stun = 0
+	else:
+		p.slow_until = host._game_frame + ticks
 	var b: StreamPeerBuffer = host._pkt(NetPackets.SERVER_CHARACTER_STATUS)
 	b.put_u8(kind)
 	b.put_u16(ticks)
@@ -468,7 +478,7 @@ func handle(p: Variant, nps: int, rb: StreamPeerBuffer) -> bool:
 				or p.get("move_state", 0) != 8
 			):
 				return true
-			var at := Vector2(rb.get_u16(), rb.get_u16())
+			var at := Vector2(rb.get_16(), rb.get_16())
 			if at.distance_to(pos(p) + Vector2(0, 18)) > 8:
 				return true
 			if not grounded(p) or floor_at(pos(p), "angle"):
@@ -496,7 +506,7 @@ func handle(p: Variant, nps: int, rb: StreamPeerBuffer) -> bool:
 				or p.get("move_state", 0) != 15
 			):
 				return true
-			var center := Vector2(rb.get_u16(), rb.get_u16())
+			var center := Vector2(rb.get_16(), rb.get_16())
 			rb.get_u8()  # demon status is always server-authored
 			if (
 				center.distance_to(
@@ -565,8 +575,8 @@ func broadcast_trap(trap: Dictionary, peer: ENetPacketPeer = null) -> void:
 	var b: StreamPeerBuffer = host._pkt(NetPackets.SERVER_ETRACKER_STATE)
 	b.put_u8(0)
 	b.put_u16(trap.id)
-	b.put_u16(int(trap.at.x))
-	b.put_u16(int(trap.at.y))
+	b.put_16(int(trap.at.x))
+	b.put_16(int(trap.at.y))
 	b.put_u16(trap.owner)
 	b.put_u8(int(trap.demon))
 	if peer:

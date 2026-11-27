@@ -177,6 +177,7 @@ func handle(p, type: int, b: StreamPeerBuffer) -> bool:
 							clones.erase(id)
 							p.last_x = int(at.x)
 							p.last_y = int(at.y)
+							host.motion.warp(p, at)
 							p.clone_ready = now + 1800
 							var consume: StreamPeerBuffer = host._pkt(
 								NetPackets.SERVER_EXELLERCLONE_STATE
@@ -211,3 +212,13 @@ func tick():
 				b.put_16(int(at.x))
 				b.put_16(int(at.y))
 				host._broadcast(b)
+
+
+func sync_actor(p: Dictionary, actor):
+	if not is_exeller(p):
+		return
+	actor.hunter.clones.assign([-1, -1])
+	for id in clones:
+		var clone: Dictionary = clones[id]
+		if clone.owner == p.nid:
+			actor.hunter.clones[clone.slot] = id

@@ -144,4 +144,14 @@ func consume_ring(p: Dictionary):
 	sound.put_u8(0)
 	host._broadcast(sound, p.nid)
 
+
 # RMZSlug.c spawn: 0..49 empty, 50..89 normal ring, 90..99 red ring.
+
+
+func moving_spike_frame() -> int:
+	return spike
+
+
+func sync_simulation(world):
+	for n in world.dynamic.values():
+		n.set_spike_frame(spike)

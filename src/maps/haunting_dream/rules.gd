@@ -167,3 +167,15 @@ func tick_doors():
 				p.hurttime = 0
 				p.sally_shield_end = 0
 				apply_damage(p, p.hp, 1)
+
+
+func sync_simulation(world):
+	for name in world.dynamic:
+		var door: Dictionary = doors.get(name, {})
+		if not door.is_empty():
+			world.dynamic[name].position = Vector2(door.x, door.y)
+
+
+func simulation_interactions(world, p: Dictionary, actor):
+	super.simulation_interactions(world, p, actor)
+	simulation_requests(world, p, {"obj_hd_crystal": NetPackets.CLIENT_HDDOOR_TOGGLE})
